@@ -11,6 +11,13 @@ module KouyouseiChecker
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.0
 
+    # === ここから追記（ISSUE #1 日本語化 & タイムゾーン）===
+    config.i18n.default_locale = :ja
+    config.i18n.available_locales = [ :ja, :en ]  # 必須ではないが明示しておくと安心
+    config.time_zone = "Tokyo"
+    config.active_record.default_timezone = :local  # DBの時刻もJSTにしたい場合
+    # （UTCのままで良ければ↑行は削除）
+    # === ここまで追記 ===
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
