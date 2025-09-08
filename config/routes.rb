@@ -5,7 +5,7 @@ Rails.application.routes.draw do
       post :submit # /questions/submit にPOST
     end
   end
-  
+
   # 診断結果表示
   resources :results, only: [ :show ], param: :id
 end
