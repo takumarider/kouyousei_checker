@@ -1,0 +1,25 @@
+<h1>診断フォーム</h1>
+
+<% if flash[:alert].present? %>
+  <p style="color:red;"><%= flash[:alert] %></p>
+<% end %>
+
+<%= form_with url: submit_questions_path, method: :post do %>
+  <ol>
+    <% @questions.each do |q| %>
+      <li style="margin-bottom: 1rem;">
+        <p><strong><%= q.content %></strong></p>
+        <% q.options.order(:score).reverse.each_with_index do |opt, idx| %>
+          <label style="margin-right: 1rem;">
+            <%= radio_button_tag "answers[#{q.id}]", opt.id, false, required: (idx == 0) %>
+            <%= opt.label %>（<%= opt.score %> 点）
+          </label>
+        <% end %>
+      </li>
+    <% end %>
+  </ol>
+
+  <div style="margin-top: 1rem;">
+    <%= submit_tag "診断する" %>
+  </div>
+<% end %>
