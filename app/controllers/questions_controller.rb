@@ -19,15 +19,21 @@ class QuestionsController < ApplicationController
         return redirect_to questions_path, alert: "全ての設問に回答してください。"
       end
 
-      # 合計スコアを算出
-      option_ids = answers.values.map(&:to_i)
-      total_score = Option.where(id: option_ids).sum(:score)
+      # セッションIDを生成（UUIDを使用）
+      session_id = SecureRandom.uuid
 
-      # 診断結果を取得（範囲一致）
-      @result = Result.where("min_score <= ? AND max_score >= ?", total_score, total_score).first
-      @total_score = total_score
+      # 回答を保存
+      Answer.transaction do
+        answers.each do |question_id, option_id|
+          Answer.create!(
+            session_id: session_id,
+            question_id: question_id.to_i,
+            option_id: option_id.to_i
+          )
+        end
+      end
 
-      # 結果画面を表示（簡易）
-      render :result, status: :ok
+      # 結果ページにリダイレクト
+      redirect_to result_path(id: session_id)
     end
 end
